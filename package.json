@@ -1,0 +1,17 @@
+{
+  "name": "exchange-rate-cron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "node-cron": "^3.0.3",
+    "sqlite3": "^5.1.7"
+  }
+}
