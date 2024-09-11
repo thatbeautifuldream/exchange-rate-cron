@@ -1,13 +1,24 @@
 const cron = require("node-cron");
 const axios = require("axios");
 const sqlite3 = require("sqlite3").verbose();
+const fs = require("fs");
+
+// Function to log messages to both console and file
+function log(message) {
+  const timestamp = new Date().toISOString();
+  const logMessage = `${timestamp}: ${message}\n`;
+  console.log(message);
+  fs.appendFile("exchange_rate_log.txt", logMessage, (err) => {
+    if (err) console.error("Error writing to log file:", err);
+  });
+}
 
 // Initialize SQLite database
 const db = new sqlite3.Database("./exchange_rates.db", (err) => {
   if (err) {
-    console.error("Error opening database", err);
+    log(`Error opening database: ${err}`);
   } else {
-    console.log("Connected to the SQLite database.");
+    log("Connected to the SQLite database.");
     db.run(`CREATE TABLE IF NOT EXISTS exchange_rates (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       date TEXT,
@@ -30,14 +41,14 @@ async function getAndStoreINRtoUSDRate() {
       [date, usdRate],
       function (err) {
         if (err) {
-          console.error("Error inserting data:", err.message);
+          log(`Error inserting data: ${err.message}`);
         } else {
-          console.log(`Stored in DB: 1 INR = ${usdRate} USD on ${date}`);
+          log(`Stored in DB: 1 INR = ${usdRate} USD on ${date}`);
         }
       }
     );
   } catch (error) {
-    console.error("Error fetching exchange rate:", error.message);
+    log(`Error fetching exchange rate: ${error.message}`);
   }
 }
 
@@ -58,25 +69,25 @@ function getLatestRate() {
 }
 
 // Run the exchange rate check immediately on startup
-console.log("Running initial INR to USD exchange rate check");
+log("Running initial INR to USD exchange rate check");
 getAndStoreINRtoUSDRate();
 
 // Schedule the cron job to run once a day at midnight
 cron.schedule("0 0 * * *", () => {
-  console.log("Running daily INR to USD exchange rate check");
+  log("Running daily INR to USD exchange rate check");
   getAndStoreINRtoUSDRate();
 });
 
-console.log("Cron job scheduled. Waiting for next execution...");
+log("Cron job scheduled. Waiting for next execution...");
 
 // Example of how to use the latest rate
 setInterval(async () => {
   try {
     const latestRate = await getLatestRate();
-    console.log(
+    log(
       `Latest rate in DB: 1 INR = ${latestRate.rate} USD on ${latestRate.date}`
     );
   } catch (error) {
-    console.error("Error getting latest rate:", error.message);
+    log(`Error getting latest rate: ${error.message}`);
   }
 }, 60000); // Check every minute (for demonstration purposes)
