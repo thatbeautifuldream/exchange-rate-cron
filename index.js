@@ -8,7 +8,7 @@ function log(message) {
   const timestamp = new Date().toISOString();
   const logMessage = `${timestamp}: ${message}\n`;
   console.log(message);
-  fs.appendFile("exchange_rate_log.txt", logMessage, (err) => {
+  fs.appendFile("exchange_rates_log.txt", logMessage, (err) => {
     if (err) console.error("Error writing to log file:", err);
   });
 }
