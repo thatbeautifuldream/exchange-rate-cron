@@ -1,4 +1,0 @@
-2024-09-11T16:00:48.881Z: Running initial INR to USD exchange rate check
-2024-09-11T16:00:48.914Z: Cron job scheduled. Waiting for next execution...
-2024-09-11T16:00:48.916Z: Connected to the SQLite database.
-2024-09-11T16:00:49.651Z: Stored in DB: 1 INR = 0.0119 USD on 2024-09-11
